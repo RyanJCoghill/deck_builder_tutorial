@@ -1,7 +1,12 @@
-[gd_scene load_steps=3 format=3 uid="uid://doh5bqajkdssw"]
+[gd_scene load_steps=6 format=3 uid="uid://doh5bqajkdssw"]
 
 [ext_resource type="Texture2D" uid="uid://cp4iq5fd6j8be" path="res://art/background.png" id="1_14sb6"]
 [ext_resource type="Script" path="res://scripts/battle/battle.gd" id="1_tbyc6"]
+[ext_resource type="PackedScene" uid="uid://bwu6l5xj6cdwt" path="res://scenes/cardUI/card_ui.tscn" id="3_s63dg"]
+[ext_resource type="Script" path="res://scripts/UI/hand.gd" id="3_vg2x2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1i0sq"]
+size = Vector2(256, 100)
 
 [node name="Battle" type="Node2D"]
 script = ExtResource("1_tbyc6")
@@ -14,7 +19,47 @@ centered = false
 metadata/_edit_lock_ = true
 
 [node name="Day" type="Sprite2D" parent="."]
+visible = false
 modulate = Color(0.774443, 0.886166, 0.978568, 1)
 texture = ExtResource("1_14sb6")
 centered = false
 metadata/_edit_lock_ = true
+
+[node name="CardDropArea" type="Area2D" parent="."]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CardDropArea"]
+position = Vector2(128, 50)
+shape = SubResource("RectangleShape2D_1i0sq")
+
+[node name="Battle UI" type="CanvasLayer" parent="." groups=["UI_layer"]]
+
+[node name="Hand" type="HBoxContainer" parent="Battle UI"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -75.0
+offset_top = -40.0
+offset_right = 75.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+script = ExtResource("3_vg2x2")
+
+[node name="CardUI" parent="Battle UI/Hand" instance=ExtResource("3_s63dg")]
+layout_mode = 2
+
+[node name="CardUI2" parent="Battle UI/Hand" instance=ExtResource("3_s63dg")]
+layout_mode = 2
+
+[node name="CardUI4" parent="Battle UI/Hand" instance=ExtResource("3_s63dg")]
+layout_mode = 2
+
+[node name="CardUI5" parent="Battle UI/Hand" instance=ExtResource("3_s63dg")]
+layout_mode = 2
+
+[node name="CardUI3" parent="Battle UI/Hand" instance=ExtResource("3_s63dg")]
+layout_mode = 2

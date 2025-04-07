@@ -1,0 +1,80 @@
+[gd_scene load_steps=9 format=3 uid="uid://bwu6l5xj6cdwt"]
+
+[ext_resource type="Script" path="res://scripts/cardUI/card_ui.gd" id="1_2wpjh"]
+[ext_resource type="Theme" uid="uid://dmo2dohmr3jg2" path="res://main_theme.tres" id="1_y1ete"]
+[ext_resource type="Script" path="res://scripts/cardUI/card_state_machine.gd" id="3_fam74"]
+[ext_resource type="Script" path="res://scripts/cardUI/card_state/card_base.gd" id="4_4iiq3"]
+[ext_resource type="Script" path="res://scripts/cardUI/card_state/card_clicked.gd" id="5_8x1ue"]
+[ext_resource type="Script" path="res://scripts/cardUI/card_state/card_dragged.gd" id="6_osanl"]
+[ext_resource type="Script" path="res://scripts/cardUI/card_state/card_released.gd" id="7_x7k3v"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jgk27"]
+size = Vector2(25, 35)
+
+[node name="CardUI" type="Control"]
+custom_minimum_size = Vector2(25, 35)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -231.0
+offset_bottom = -109.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2wpjh")
+
+[node name="Color" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.979605, 0, 0.267653, 1)
+
+[node name="State" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_y1ete")
+text = "STATE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DropDetector" type="Area2D" parent="."]
+collision_mask = 2
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DropDetector"]
+visible = false
+position = Vector2(12.5, 17.5)
+shape = SubResource("RectangleShape2D_jgk27")
+
+[node name="CardStateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("3_fam74")
+initial_state = NodePath("CardBase")
+
+[node name="CardBase" type="Node" parent="CardStateMachine"]
+script = ExtResource("4_4iiq3")
+
+[node name="CardClicked" type="Node" parent="CardStateMachine"]
+script = ExtResource("5_8x1ue")
+state = 1
+
+[node name="CardDragged" type="Node" parent="CardStateMachine"]
+script = ExtResource("6_osanl")
+state = 2
+
+[node name="CardReleased" type="Node" parent="CardStateMachine"]
+script = ExtResource("7_x7k3v")
+state = 4
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
+[connection signal="area_entered" from="DropDetector" to="." method="_on_drop_detector_area_entered"]
+[connection signal="area_exited" from="DropDetector" to="." method="_on_drop_detector_area_exited"]
